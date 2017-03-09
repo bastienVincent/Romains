@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,9 @@ namespace NombresRomainsV2
                 int nombre = 0;
                 if (int.TryParse(input, out nombre))
                 {
-                    if (nombre > 0 && nombre < 5000)
+                    if (nombre == -1)
+                        testerTouslesNombres();
+                    else if (nombre > 0 && nombre < 5000)
                     {
                         Console.WriteLine(convertirEnNombreRomain(nombre));
                     }
@@ -29,6 +32,21 @@ namespace NombresRomainsV2
                     Console.WriteLine("Valeur spécifiée n'est pas un nombre. Entrez une nouvelle valeur");
                 input = Console.ReadLine();
             }
+        }
+
+        private static void testerTouslesNombres()
+        {
+            var timer = Stopwatch.StartNew();
+            for (int j = 0; j < 10000; j++)
+            {
+                for (int i = 1; i < 5000; i++)
+                {
+                    convertirEnNombreRomain(i);
+                }
+            }
+
+            timer.Stop();
+            Console.WriteLine("Temps : " + timer.ElapsedMilliseconds);
         }
 
         private static string convertirEnNombreRomain(int nombre)
