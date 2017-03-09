@@ -12,12 +12,9 @@ namespace NombresRomains
 
         static void Main(string[] args)
         {
-            
             Console.WriteLine("Veuillez entrer un nombre entre 1 et 4999 pour voir sa repésentation en nombre romain. exit pour quitter l'application");
 
-
             var input = Console.ReadLine();
-
             while(input.ToLower()!="exit")
             {
                 int nombre = 0;
@@ -62,9 +59,5 @@ namespace NombresRomains
         {
             return listeMillier[nombre];
         }
-
-
-
-
     }
 }
