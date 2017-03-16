@@ -1,18 +1,23 @@
-﻿using System;
+﻿using Helpers.Interfaces;
+using Ninject;
+using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 
 namespace NombresRomains
 {
     class Program
     {
-        static string[] listeEntier = new string[10] { "", "I", "II","III","IV","V","VI","VII","VIII","IX" };
-        static string[] listeDizaine = new string[10] { "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC" };
-        static string[] listeCentaine =  new string[10] { "", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM" };
-        static string[] listeMillier = new string[5] { "", "M", "MM", "MMM", "MMMM" };
+        private static IConvertisseurRomain _convertisseur;
 
         static void Main(string[] args)
         {
+            StandardKernel kernel = new StandardKernel();
+
+            kernel.Load(Assembly.GetExecutingAssembly());
+            _convertisseur = kernel.Get<IConvertisseurRomain>();
+
             Console.WriteLine("Veuillez entrer un nombre entre 1 et 4999 pour voir sa repésentation en nombre romain. exit pour quitter l'application");
 
             var input = Console.ReadLine();
@@ -21,11 +26,12 @@ namespace NombresRomains
                 int nombre = 0;
                 if (int.TryParse(input, out nombre))
                 {
-                    if (nombre == -1)
-                        testerTouslesNombres();
-                    else if (nombre > 0 && nombre < 5000)
+                    //if (nombre == -1)
+                     //   testerTouslesNombres();
+                   // else 
+                    if (nombre > 0 && nombre < 5000)
                     {
-                        Console.WriteLine(convertirEnNombreRomain(nombre));
+                        Console.WriteLine(_convertisseur.ConvertirEnNombreRomain(nombre));
                     }
                     else
                         Console.WriteLine("Valeur non comprise entre 1 et 4999. Entrez une nouvelle valeur");
@@ -36,45 +42,20 @@ namespace NombresRomains
             }
         }
 
-        private static void testerTouslesNombres()
-        {
-            var timer = Stopwatch.StartNew();
-            for (int j = 0; j < 10000; j++)
-            {
-                for (int i = 1; i < 5000; i++)
-                {
-                    convertirEnNombreRomain(i);
-                }
-            }
-            timer.Stop();
-            Console.WriteLine("Temps : " + timer.ElapsedMilliseconds);
-        }
+        //private static void testerTouslesNombres()
+        //{
+        //    var timer = Stopwatch.StartNew();
+        //    for (int j = 0; j < 10000; j++)
+        //    {
+        //        for (int i = 1; i < 5000; i++)
+        //        {
+        //            convertirEnNombreRomain(i);
+        //        }
+        //    }
+        //    timer.Stop();
+        //    Console.WriteLine("Temps : " + timer.ElapsedMilliseconds);
+        //}
 
-        private static string convertirEnNombreRomain(int nombre)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(RetournerMillierRomain(nombre / 1000 % 10)).Append(RetournerCentaineRomain(nombre / 100 % 10)).Append(RetournerDizaineRomain(nombre / 10 % 10)).Append(RetournerEntierRomain(nombre % 10));
-            return sb.ToString();
-        }
-
-        static string RetournerEntierRomain(int nombre)
-        {
-            return listeEntier[nombre];
-        }
-
-        static string RetournerCentaineRomain(int nombre)
-        {
-            return listeCentaine[nombre];
-        }
-
-        static string RetournerDizaineRomain(int nombre)
-        {
-            return listeDizaine[nombre];
-        }
-
-        static string RetournerMillierRomain(int nombre)
-        {
-            return listeMillier[nombre];
-        }
+       
     }
 }
